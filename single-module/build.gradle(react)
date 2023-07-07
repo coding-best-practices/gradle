@@ -1,0 +1,56 @@
+plugins {
+    id "com.github.node-gradle.node" version "5.0.0"
+}
+node {
+    download = true
+    version = "16.13.0"
+//    distBaseUrl = "https://nodejs.org/dist"
+//    allowInsecureProtocol = null
+//    npmInstallCommand = "install"
+//    workDir = file("${project.projectDir}/.gradle/nodejs")
+//    npmWorkDir = file("${project.projectDir}/.gradle/npm")
+//    yarnWorkDir = file("${project.projectDir}/.gradle/yarn")
+//    nodeProjectDir = file("${project.projectDir}")
+//    nodeProxySettings = ProxySettings.SMART
+}
+
+tasks.register("npmStart", NpmTask) {
+    dependsOn('npmInstall')
+    args = ['start']
+    execOverrides {
+        it.ignoreExitValue = true
+    }
+    group 'application'
+    description 'Start the react app npm module'
+}
+
+tasks.register("npmStop", Exec) {
+    workingDir '.'
+    commandLine 'taskkill', '/IM', 'node.exe', '-F'
+    group 'application'
+    description 'Stop the react app npm module'
+}
+
+tasks.register("npmBuild", NpmTask) {
+    dependsOn('npmInstall')
+    execOverrides {
+        it.ignoreExitValue = true
+    }
+    args = ['run', 'build']
+    description 'Executes npm run build'
+}
+
+tasks.register("npmVersion", NpmTask) {
+    args = ['--version']
+}
+
+//For Copying React Artifacts to Parent Module
+tasks.register("copyReactApp", Copy) {
+    dependsOn(":app:npmBuild")
+    from project(':app').buildDir
+    into "${rootDir}/build/resources/main/static/"
+    group 'build'
+}
+
+// To Automate copy in the parent project to automate
+//bootJar.dependsOn(":app:copyReactApp")
