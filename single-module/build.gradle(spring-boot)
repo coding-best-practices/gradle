@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.1'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.barfuin.gradle.taskinfo' version '2.1.0' //tiTree
 }
 
 group = 'com.sample'
@@ -31,6 +32,9 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// Automate the copy of the React Application
+// bootJar.dependsOn(":app:copyReactApp")
 
 // This section causes useful test output to go to the terminal.
 test {
