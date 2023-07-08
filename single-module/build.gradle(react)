@@ -48,6 +48,7 @@ tasks.register("npmVersion", NpmTask) {
 tasks.register("copyReactApp", Copy) {
     dependsOn(":app:npmBuild")
     from project(':app').buildDir
+    exclude 'tmp'
     into "${rootDir}/build/resources/main/static/"
     group 'build'
 }
